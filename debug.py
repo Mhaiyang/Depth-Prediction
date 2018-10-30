@@ -10,9 +10,14 @@
 """
 import skimage.io
 import numpy as np
+#
+# depth_path = "./nyu_depth_v2/image/2.jpg"
+# depth = skimage.io.imread(depth_path)
+# print(np.max(depth))
+# print(np.min(depth))
+# print(depth.dtype)
+a = np.array([1]).astype(np.int32)
+b = np.array([1]).astype(np.int32)
 
-depth_path = "./nyu_depth_v2/image/2.jpg"
-depth = skimage.io.imread(depth_path)
-print(np.max(depth))
-print(np.min(depth))
-print(depth.dtype)
+print((a/b).dtype)
+print(b)

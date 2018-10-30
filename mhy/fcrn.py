@@ -211,7 +211,7 @@ def resnet_graph(input_image, architecture, stage5=False, train_bn=True):
 ############################################################
 #  Loss Functions
 ############################################################
-def depth_loss_graph(input_gt_depth, predict_depth)
+def depth_loss_graph(input_gt_depth, predict_depth):
 
     target_depth = input_gt_depth
     predict_depth = tf.squeeze(predict_depth, -1)
@@ -550,7 +550,7 @@ class SubpixelConv2D(KE.Layer):
         return tuple([input_shape[0],
                       input_shape[1] * self.scale,
                       input_shape[2] * self.scale,
-                      input_shape[3] / (self.scale ** 2)])
+                      self.output_channel])
 
 
 ############################################################
@@ -617,7 +617,7 @@ class FCRN(object):
 
         if mode == "training":
             # Losses
-            depth_loss = KL.Lambda(lambda x: mask_loss_graph(*x), name="depth_loss")([input_gt_depth, predict_depth])
+            depth_loss = KL.Lambda(lambda x: depth_loss_graph(*x), name="depth_loss")([input_gt_depth, predict_depth])
 
             # Model
             inputs = [input_image, input_gt_depth]
@@ -626,7 +626,7 @@ class FCRN(object):
             model.load_weights(self.config.Pretrained_Model_Path, by_name=True)
 
         else:
-            model = KM.Model(input_image, predict_depth, name='PSP')
+            model = KM.Model(input_image, predict_depth, name='FCRN')
 
         # Add multi-GPU support.
         if config.GPU_COUNT > 1:

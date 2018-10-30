@@ -25,7 +25,7 @@ config = depth.MirrorConfig()
 config.display()
 
 # Configuration
-dataset_root_path = os.path.abspath(os.path.join(ROOT_DIR, "./data_640"))
+dataset_root_path = os.path.abspath(os.path.join(ROOT_DIR, "./nyu_depth_v2"))
 train_folder = dataset_root_path + "/train"
 val_folder = dataset_root_path + "/val"
 train_image_folder = train_folder + "/image"
@@ -41,7 +41,7 @@ print("Train Image Count : {} \nValidation Image Count : {}".format(train_count,
 # Training dataset
 dataset_train = depth.DepthDataset()
 dataset_train.load_info(train_count, train_image_folder,
-                          train_depth_folder, train_imglist)     # add class and add image.
+                        train_depth_folder, train_imglist)     # add class and add image.
 dataset_train.prepare("train")
 
 # Validation dataset

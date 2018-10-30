@@ -3,7 +3,8 @@ import numpy as np
 from PIL import Image
 from mhy.config import Config
 import mhy.utils as utils
-import skimage.io, skimage.color
+import skimage.io
+import skimage.color
 
 
 # Configurations
@@ -18,7 +19,7 @@ class MirrorConfig(Config):
     # Train on 1 GPU and 8 images per GPU. We can put multiple images on each
     # GPU because the images are small. Batch size is 8 (GPUs * images/GPU).
     GPU_COUNT = 2
-    IMAGES_PER_GPU = 4
+    IMAGES_PER_GPU = 8
 
     IMAGE_HEIGHT = 640
     IMAGE_WIDTH = 480
@@ -47,14 +48,15 @@ class DepthDataset(utils.Dataset):
     def load_info(self, count, img_folder, gt_folder, imglist):
         for i in range(count):
             filestr = imglist[i].split(".")[0]  # 10.jpg for example
+            image_path = img_folder + "/" + imglist[i]
             depth_path = gt_folder + "/" + filestr + ".png"
             if not os.path.exists(depth_path):
                 print("image {} has no depth map".format(filestr))
                 continue
             img = Image.open(depth_path)
             width, height = img.size
-            self.add_image(image_id=i, image_path=img_folder + "/" + imglist[i],
-                           width=width, height=height, depth_path=depth_path)
+            self.add_image(image_id=i, image_path=image_path, width=width, height=height,
+                           depth_path=depth_path)
 
     def load_image(self, image_id):
         """Load the specified image and return a [H,W,3] Numpy array.
