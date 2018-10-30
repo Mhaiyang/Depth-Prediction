@@ -62,19 +62,19 @@ if init_with == "last":
 
 # ## Training
 
-# 1. Train the head branches 1e-2
+# 1. Train the all layers 1e-2
 model.train(dataset_train, dataset_val,
             learning_rate=config.LEARNING_RATE,
-            epochs=40,
-            layers='heads')
-model_path = os.path.join(MODEL_DIR, "depth_fcrn_heads_40.h5")
+            epochs=100,
+            layers='all')
+model_path = os.path.join(MODEL_DIR, "depth_fcrn_all_100.h5")
 model.keras_model.save_weights(model_path)
 
 # 2. Fine tune all layers 1e-3
 model.train(dataset_train, dataset_val,
             learning_rate=config.LEARNING_RATE / 10,
-            epochs=60,
+            epochs=150,
             layers="all", save_model_each_epoch=False)
-model_path = os.path.join(MODEL_DIR, "depth_fcrn_all_60.h5")
+model_path = os.path.join(MODEL_DIR, "depth_fcrn_all_150.h5")
 model.keras_model.save_weights(model_path)
 

@@ -613,7 +613,7 @@ class FCRN(object):
         x = SubpixelConv2D([64, 16], 2, name="fcrn_up3")(x)
         x = KL.Conv2D(16, (3, 3), strides=(1, 1), padding="same", name="fcrn_conv3", activation="relu")(x)
 
-        predict_depth = KL.Conv2D(1, (1, 1), strides=(1, 1), padding="same", name="fcrn_depth_prediction")(x)
+        predict_depth = KL.Conv2D(1, (3, 3), strides=(1, 1), padding="same", name="fcrn_depth_prediction")(x)
 
         if mode == "training":
             # Losses
