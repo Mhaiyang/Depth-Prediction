@@ -935,27 +935,19 @@ class FCRN(object):
             original image (padding excluded).
         """
         molded_images = []
-        windows = []
         # Actually only need handle one image.
         for image in images:
             # Resize image
             # TODO: move resizing to mold_image()
-            molded_image, window, scale, padding, crop = utils.resize_image(
-                image,
-                min_dim=self.config.IMAGE_MIN_DIM,
-                max_dim=self.config.IMAGE_MAX_DIM,
-                min_scale=self.config.IMAGE_MIN_SCALE,
-                mode=self.config.IMAGE_RESIZE_MODE)
+            molded_image = image
             molded_image = mold_image(molded_image, self.config)
             # Append
             molded_images.append(molded_image)
-            windows.append(window)
         # Pack into arrays
         molded_images = np.stack(molded_images)
-        windows = np.stack(windows)
-        return molded_images, windows
+        return molded_images
 
-    def unmold_detections(self, predict_mask):
+    def unmold_detections(self, predict_depth):
         """Reformats the detections of one image from the format of the neural
         network output to a format suitable for use in the rest of the
         application.
@@ -974,9 +966,9 @@ class FCRN(object):
         masks: [height, width, num_instances] Instance masks
         """
         # Convert neural network mask to full size mask
-        final_mask = utils.unmold_mask(predict_mask)
+        final_depth = utils.unmold_depth(predict_depth)
 
-        return final_mask
+        return final_depth
 
     def detect(self, imgname, images, verbose=0):
         """Runs the detection pipeline.
@@ -1001,7 +993,7 @@ class FCRN(object):
 
         # Mold inputs to format expected by the neural network
         # images is a list which has only one image.
-        molded_images, windows = self.mold_inputs(images)
+        molded_images = self.mold_inputs(images)
 
         # Validate image sizes
         # All images in a batch MUST be of the same size
@@ -1013,12 +1005,12 @@ class FCRN(object):
         if verbose:
             log("molded_images", molded_images)
         # Run object detection
-        predict_mask = self.keras_model.predict([molded_images], verbose=0)
+        predict_depth = self.keras_model.predict([molded_images], verbose=0)
 
         # Process detections
         results = []
-        final_mask = self.unmold_detections(predict_mask)
-        results.append({"mask": final_mask})
+        final_depth = self.unmold_detections(predict_depth)
+        results.append({"depth": final_depth})
 
         return results
 

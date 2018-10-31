@@ -8,7 +8,7 @@ import skimage.color
 
 
 # Configurations
-class MirrorConfig(Config):
+class DepthConfig(Config):
     """Configuration for training on the mirror dataset.
     Derives from the base Config class and overrides values specific
     to the mirror dataset.

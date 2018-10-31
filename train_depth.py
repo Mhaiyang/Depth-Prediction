@@ -21,7 +21,7 @@ ROOT_DIR = os.getcwd()
 # Directory to save logs and trained model
 MODEL_DIR = os.path.join(ROOT_DIR, "log", "fcrn")
     
-config = depth.MirrorConfig()
+config = depth.DepthConfig()
 config.display()
 
 # Configuration
