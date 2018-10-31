@@ -593,7 +593,7 @@ class FCRN(object):
 
         # Inputs
         input_image = KL.Input(
-            shape=[640, 480, 3], name="input_image", dtype=tf.float32)
+            shape=[640, 640, 3], name="input_image", dtype=tf.float32)
 
         if mode == "training":
             # 1. GT Masks [batch, height, width, 1]
@@ -939,7 +939,8 @@ class FCRN(object):
         for image in images:
             # Resize image
             # TODO: move resizing to mold_image()
-            molded_image = image
+            molded_image, window, scale, padding, crop = utils.resize_image(
+                image, min_dim=512, max_dim=640, min_scale=1, mode="square")
             molded_image = mold_image(molded_image, self.config)
             # Append
             molded_images.append(molded_image)
