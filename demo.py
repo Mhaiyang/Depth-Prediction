@@ -8,7 +8,6 @@ import os
 import numpy as np
 import skimage.io
 import skimage.measure
-import mhy.visualize as visualize
 from depth import DepthConfig
 # Important, need change when test different models.
 import mhy.fcrn as modellib
@@ -17,8 +16,8 @@ import mhy.fcrn as modellib
 ROOT_DIR = os.getcwd()
 MODEL_DIR = os.path.join(ROOT_DIR, "log", "fcrn")
 DEPTH_MODEL_PATH = os.path.join(MODEL_DIR, "depth_fcrn_all_150.h5")
-IMAGE_DIR = os.path.join(ROOT_DIR, "nyu_depth_v2", "demo", "image")
-OUTPUT_PATH = os.path.join(ROOT_DIR, 'nyu_depth_v2', 'demo', "predict_depth")
+IMAGE_DIR = os.path.join(ROOT_DIR, "nyu_depth_v2", "demo", "train")
+OUTPUT_PATH = os.path.join(ROOT_DIR, 'nyu_depth_v2', 'demo', "train_depth")
 if not os.path.exists(OUTPUT_PATH):
     os.mkdir(OUTPUT_PATH)
 
@@ -61,9 +60,9 @@ for i, imgname in enumerate(imglist):
         final_depth = predict_depth[64:576, :]
 
     ###########################################################################
-    ################  Quantitative Evaluation for Single Image ################
+    # ###############  Quantitative Evaluation for Single Image ###############
     ###########################################################################
-    skimage.io.imsave(os.path.join(OUTPUT_PATH, imgname[:-4]+".png"), (final_depth).astype(np.uint8))
+    skimage.io.imsave(os.path.join(OUTPUT_PATH, imgname[:-4]+".png"), final_depth.astype(np.uint8))
 
 
 
